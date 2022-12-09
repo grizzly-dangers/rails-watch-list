@@ -6,12 +6,14 @@ class ListsController < ApplicationController
   end
 
   def show
-    @list = List.find(params[:id])
     @bookmark = Bookmark.new
   end
 
   def new
     @list = List.new
+  end
+
+  def edit
   end
 
   def create
@@ -23,15 +25,18 @@ class ListsController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def update
     @list.update(list_params)
+    if @list.update(list_params)
+      redirect_to @list, notice: 'list was successfully updated.'
+    else
+      render :edit
+    end
   end
 
   def destroy
     @list.destroy
+    redirect_to lists_path, status: :see_other
   end
 
   private
@@ -41,6 +46,6 @@ class ListsController < ApplicationController
   end
 
   def list_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, :photo)
   end
 end
